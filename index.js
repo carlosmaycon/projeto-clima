@@ -12,7 +12,7 @@ document.addEventListener('click', (e) => {
     if (styleEl.display === 'none') {
       menu.style.display = 'block'
       containMenuIco2.appendChild(containerIcoSpan)
-      
+
     } else {
       tableIcoTd.appendChild(containerIcoSpan)
       menu.style.display = 'none'

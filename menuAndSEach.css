@@ -1,14 +1,3 @@
-.seach {
-    transform: translate(0px, 8px);
-    height: 35px;
-    width: 45px;
-    background-color: #2fb9efd3;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    color: white;
-}
-
 .btn {
     place-items: center;
     background: #2fb9ef9a;
@@ -19,7 +8,6 @@
     cursor: pointer;
     transition: transform 0.5s;
 }
-
 .btn:hover {
     box-shadow: inset 4px 4px 6px -1px rgba(0, 0, 0, 0.2),
         inset -4px -4px 6px -1px rgba(255, 255, 255, 0.7),
@@ -29,17 +17,13 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     transform: translateY(0.5em);
 }
-
 .btn svg {
     transition: transform 0.5s;
 }
-
 .btn:hover svg {
     transform: scale(0.9);
     fill: black;
 }
-
-
 
 
 .hamburger {
@@ -84,4 +68,9 @@ table > td {
 }
 #contain-menuIco2 .line{
     stroke: #ffffff;
+}
+#contain-menuIco2 {
+    text-align: center;
+    position: relative;
+    top: 320px;
 }

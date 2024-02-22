@@ -4,11 +4,9 @@
     margin: 0px;
     padding: 0px;
 }
-
 body {
     width: 100vw;
 }
-
 header {
     height: 120px;
     background-image: linear-gradient(to bottom, #2fb9efd3, white);
@@ -16,39 +14,33 @@ header {
     padding-top: 15px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.534);
 }
-
 header h1 {
     font-size: 50px;
     font-weight: normal;
     padding-right: 170px;
     text-align: center;
 }
-
 header p {
     font-size: 25px;
     font-family: "Satisfy", cursiva;
     text-align: center;
     margin: auto;
 }
-
 #div-inp-local {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 25px 0px;
 }
-
 #inp-local {
     width: 280px;
     padding: 8px;
     border-radius: 7px;
     border: 2px solid black;
 }
-
 #inp-local:focus {
     outline: none;
 }
-
 
 
 #menu {
