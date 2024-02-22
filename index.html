@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaSense</title>
+    <link rel="stylesheet" href="style.css" media="all">
+    <link rel="stylesheet" href="menuAndSEach.css" media="all">
+</head>
+
+<body>
+    <header>
+        <h1>ClimaSense</h1>
+
+        <table>
+            <tr>
+                <td id="td-menu">
+                    <span class="menuIco menuIcoContainer">
+                        <label class="hamburger">
+                            <input type="checkbox">
+                            <svg viewBox="0 0 32 32" class="menuIco">
+                                <path class="line line-top-bottom"
+                                    d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22">
+                                </path>
+                                <path class="line" d="M7 16 27 16"></path>
+                            </svg>
+                        </label>
+                    </span>
+                </td>
+
+                <td>
+                    <p>Seu companheiro meteorológico confiável</p>
+                </td>
+            </tr>
+        </table>
+
+
+    </header>
+    <main>
+        <div id="menu">
+            <ul>
+                <li><a href="https://www.instagram.com/carlos.maycon_/">Contato</a></li>
+                <li><a href="#">Serviços</a></li>
+                <li><a href="#">Sobre</a></li>
+            </ul>
+            <div id="contain-menuIco2" style="text-align: center; position: relative; top: 45%;">
+                <label id="menuIco2"></label>
+            </div>
+        </div>
+        <div id="div-inp-local">
+            <form action="/" method="get">
+                <input type="text" name="local" id="inp-local" placeholder="Busque por uma cidede...">
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path
+                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                        <path d="M0 0h24v24H0z" fill="none" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
