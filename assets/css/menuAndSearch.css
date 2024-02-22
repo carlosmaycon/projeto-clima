@@ -20,7 +20,7 @@
 .btn svg {
     transition: transform 0.5s;
 }
-.btn:hover svg {
+.btn:hover svg{
     transform: scale(0.9);
     fill: black;
 }
