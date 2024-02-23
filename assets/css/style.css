@@ -68,3 +68,17 @@ header p {
     color: white;
     text-decoration: none;
 }
+
+#data {
+    width: 90%;
+    margin: auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#name-city {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+}
+#temp, #umid, #wind-vel, #sensacao-term, #est-temp, #ind-uv {
+    padding: 7px;
+}

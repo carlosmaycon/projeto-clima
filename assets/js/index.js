@@ -30,8 +30,10 @@ function localSelect(e) {
     e.preventDefault()
 
     let inputCity = document.querySelector('#inp-local').value
-    if (!inputCity)
-        inputCity = 'brasilia'
+    if (!inputCity) {
+      inputCity = 'brasilia'
+    }
+
 
     captureWeather(inputCity)
 }
@@ -43,7 +45,7 @@ async function captureWeather(city) {
     try {
         const response = await fetch(url)
         const data = await response.json()
-        console.log(data)
+        //console.log(data)
         const dataLocObj = dataLoc(data)
         showData(dataLocObj)
 
@@ -51,6 +53,7 @@ async function captureWeather(city) {
         console.error('Erro ao capturar o clima:', error)
     }
 }
+exports.captureWeather = captureWeather
 
 function dataLoc(data) {
     const coordLat = data.coord.lat
@@ -77,11 +80,34 @@ function showData(obj) {
     const containWindVel = document.querySelector('#wind-vel')
     const containUV = document.querySelector('#ind-uv')
 
-    containNameCity.innerHTML += `${obj.nameCity}, ${obj.stateCity}, ${obj.countryCity}`
-    containTemp.innerHTML += ` ${obj.temp} °C`
-    containSensTerm.innerHTML += ` ${obj.sensacaoTerm} °C`
-    containUmid.innerHTML += ` ${obj.humidade}%`
-    containEstTemp.innerHTML += ` ${obj.sky}`
-    containWindVel.innerHTML += ` ${obj.windVel}`
-    containUV.innerHTML += ` ${obj.ultraViol}`
+    containNameCity.innerHTML = `${obj.nameCity}, ${obj.stateCity}, ${obj.countryCity}`
+    containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
+    containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
+    containUmid.innerHTML = `Umidade dor ar: ${obj.humidade}%`
+    containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}`
+    containWindVel.innerHTML = `Velocidade do vento: ${obj.windVel}`
+    containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
+}
+
+function traduzir(chave) {
+    const obj = {
+        'overcast clouds': 'Céu nublado',
+        'broken clouds': 'Céu parcialmente nublado',
+        'scattered clouds': 'Nuvens dispersas',
+        'clear sky': 'Céu limpo',
+        'few clouds': 'Poucas nuvens',
+        'mist': 'Presença de neblina',
+        'fog': 'Névoa densa',
+        'snow': 'Nevando',
+        'rain': 'Chuva',
+        'drizzle': 'Chuva leve e fina',
+        'sleet': 'Granizo',
+        'haze': 'Neblina seca',
+        'smoke': 'Presença de fumaça na atmosfera',
+        'sand': 'Presença de areia na atmosfera (possívelmente uma tempestade de areia)',
+        'snow': 'Nevando',
+        'snow': 'Nevando',
+    }
+
+    return obj[chave]
 }
