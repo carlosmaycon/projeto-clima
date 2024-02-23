@@ -87,7 +87,7 @@ function showData(obj) {
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
     containUmid.innerHTML = `Umidade dor ar: ${obj.humidade}%`
-    containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}`
+    containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}` //traduzir(obj.sky)
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
 }
@@ -108,8 +108,9 @@ function traduzir(chave) {
         'haze': 'Neblina seca',
         'smoke': 'Presença de fumaça na atmosfera',
         'sand': 'Presença de areia na atmosfera (possívelmente uma tempestade de areia)',
-        'snow': 'Nevando',
-        'thunderstorm': 'Chuva forte com trovoadas'
+        'thunderstorm': 'Chuva forte com trovoadas',
+        'heavy intensity rain': 'Chuva intensa, possibilidade de inundações',
+        'very heavy rain': 'Chuva intensa, altas chances de inundações'
     }
 
     return obj[chave]
