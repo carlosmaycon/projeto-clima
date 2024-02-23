@@ -1,3 +1,8 @@
+function init() {
+    captureWeather('brasilia')
+}
+init()
+
 document.addEventListener('click', (event) => {
     const el = event.target
 
@@ -30,10 +35,9 @@ function localSelect(e) {
     e.preventDefault()
 
     let inputCity = document.querySelector('#inp-local').value
-    if (!inputCity) {
-      inputCity = 'brasilia'
-    }
 
+    if (!inputCity) 
+      alert('Digite uma cidade!')
 
     captureWeather(inputCity)
 }
@@ -53,7 +57,6 @@ async function captureWeather(city) {
         console.error('Erro ao capturar o clima:', error)
     }
 }
-exports.captureWeather = captureWeather
 
 function dataLoc(data) {
     const coordLat = data.coord.lat
@@ -85,7 +88,7 @@ function showData(obj) {
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
     containUmid.innerHTML = `Umidade dor ar: ${obj.humidade}%`
     containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}`
-    containWindVel.innerHTML = `Velocidade do vento: ${obj.windVel}`
+    containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
 }
 
@@ -106,7 +109,7 @@ function traduzir(chave) {
         'smoke': 'Presença de fumaça na atmosfera',
         'sand': 'Presença de areia na atmosfera (possívelmente uma tempestade de areia)',
         'snow': 'Nevando',
-        'snow': 'Nevando',
+        'thunderstorm': 'Chuva forte com trovoadas'
     }
 
     return obj[chave]
