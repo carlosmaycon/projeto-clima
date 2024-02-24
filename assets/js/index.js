@@ -125,8 +125,6 @@ async function showData(obj) {
     const containWindVel = document.querySelector('#wind-vel')
     const containUV = document.querySelector('#ind-uv')
 
-    document.querySelector('#loading').style.display = 'none' //tira o loading
-
     containNameCity.innerHTML = `${obj.nameCity} - ${await getState(obj.nameCity)}`
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
@@ -134,6 +132,8 @@ async function showData(obj) {
     containEstTemp.innerHTML = `Estado do tempo: ${await traduzir(obj.sky)}`
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
+
+    document.querySelector('#loading').style.display = 'none' //tira o loading
 
     document.querySelector('#inp-local').value = ''
 }
