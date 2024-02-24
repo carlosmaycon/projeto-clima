@@ -3,7 +3,6 @@ function init() {
 }
 init()
 
-
 document.addEventListener('click', (event) => {
     const el = event.target
 
@@ -55,7 +54,7 @@ async function captureWeather(city) {
         showData(dataLocObj)
 
     } catch (error) {
-        console.error('Erro ao capturar o clima:', error)
+        getState()
     }
 }
 
@@ -72,14 +71,14 @@ function dataLoc(data) {
     const windVel = data.wind.speed
     const ultraViol = data.value
 
-    if (countryCity !== 'BR')
-        return alert('Este website trabalha apenas com cidades brasileiras!')
-
+    if (countryCity !== 'BR') {
+        alert('Este website trabalha apenas com cidades brasileiras!')
+        document.querySelector('#inp-local').value = ''
+        return
+    }
+        
     return { coordLat, coordLon, sensacaoTerm, humidade, temp, nameCity, countryCity, stateCity, sky, windVel, ultraViol }
 }
-
-
-
 
 async function showData(obj) {
     const containNameCity = document.querySelector('#name-city')
@@ -97,36 +96,41 @@ async function showData(obj) {
     containEstTemp.innerHTML = `Estado do tempo: ${await traduzir(obj.sky)}`
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
+
+    document.querySelector('#inp-local').value = ''
 }
 
 async function getState(Namecity) {
+    if (!Namecity) {
+        alert('Digite uma cidade válida!')
+        document.querySelector('#inp-local').value = ''
+        return
+    }
+
     const response = await fetch('./assets/json/cidades.json');
     const jsonData = await response.json()
 
-    if (jsonData.hasOwnProperty('cities')) { //verifica se existe a cidade
-        const cities = jsonData.cities
-        const states = jsonData.states
+    const cities = jsonData.cities
+    const states = jsonData.states
 
-        for (let i = 0; i < cities.length; i++) {
-            const city = cities[i]
-            
-            if (city.name === Namecity) {
-                var stateId = city.state_id //var para estar disponivel fora do laço
+    for (let i = 0; i < cities.length; i++) {
+        const city = cities[i]
+
+        if (city.name === Namecity) {
+            const stateId = city.state_id 
+
+            for (let chave in states) {
+
+                if (chave == stateId) {
+                    const stadeOfCity = states[chave]
+                    return stadeOfCity
+                }
             }
-        }
 
-        for (let chave in states) {
-            
-            if (chave == stateId) {
-                const stadeOfCity = states[chave]
-                return stadeOfCity
-            }
         }
-
-        alert(`Cidade "${Namecity}" não encontrada.`);
-    } else {
-        console.error('O JSON não contém a chave "cities"');
     }
+    /* alert(`Digite uma cidade válida!`)
+    document.querySelector('#inp-local').value = '' */
 }
 
 function traduzir(chave) {
