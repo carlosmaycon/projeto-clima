@@ -1,9 +1,4 @@
 function init() {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        var latitude = position.coords.latitude
-        var longitude = position.coords.longitude
-        console.log(latitude, longitude)
-    })
     captureWeather('brasilia')
 }
 init()
@@ -83,7 +78,10 @@ function dataLoc(data) {
     return { coordLat, coordLon, sensacaoTerm, humidade, temp, nameCity, countryCity, stateCity, sky, windVel, ultraViol }
 }
 
-function showData(obj) {
+
+
+
+async function showData(obj) {
     const containNameCity = document.querySelector('#name-city')
     const containTemp = document.querySelector('#temp')
     const containSensTerm = document.querySelector('#sensacao-term')
@@ -92,14 +90,43 @@ function showData(obj) {
     const containWindVel = document.querySelector('#wind-vel')
     const containUV = document.querySelector('#ind-uv')
 
-    containNameCity.innerHTML = `${obj.nameCity}, ${obj.stateCity}, ${obj.countryCity}`
+    containNameCity.innerHTML = `${obj.nameCity}, ${await getState(obj.nameCity)}, ${obj.countryCity}`
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
     containUmid.innerHTML = `Umidade dor ar: ${obj.humidade}%`
-    containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}`
-    console.log(obj.sky)
+    containEstTemp.innerHTML = `Estado do tempo: ${await traduzir(obj.sky)}`
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
+}
+
+async function getState(Namecity) {
+    const response = await fetch('./assets/json/cidades.json');
+    const jsonData = await response.json()
+
+    if (jsonData.hasOwnProperty('cities')) { //verifica se existe a cidade
+        const cities = jsonData.cities
+        const states = jsonData.states
+
+        for (let i = 0; i < cities.length; i++) {
+            const city = cities[i]
+            
+            if (city.name === Namecity) {
+                var stateId = city.state_id //var para estar disponivel fora do laço
+            }
+        }
+
+        for (let chave in states) {
+            
+            if (chave == stateId) {
+                const stadeOfCity = states[chave]
+                return stadeOfCity
+            }
+        }
+
+        alert(`Cidade "${Namecity}" não encontrada.`);
+    } else {
+        console.error('O JSON não contém a chave "cities"');
+    }
 }
 
 function traduzir(chave) {
