@@ -1,7 +1,30 @@
 function init() {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var latitude = position.coords.latitude
+        var longitude = position.coords.longitude
+        getCityName(latitude, longitude)
+    })
     captureWeather('brasilia')
 }
 init()
+
+function getCityName(latitude, longitude) {
+    var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            var city = data.address.city
+            if (city) {
+                console.log("Nome da cidade:", city)
+            } else {
+                console.log("Cidade não encontrada.")
+            }
+        })
+        .catch(error => {
+            console.error("Ocorreu um erro ao obter os dados de localização:", error)
+        })
+}
 
 document.addEventListener('click', (event) => {
     const el = event.target
@@ -36,8 +59,8 @@ function localSelect(e) {
 
     let inputCity = document.querySelector('#inp-local').value
 
-    if (!inputCity) 
-      alert('Digite uma cidade!')
+    if (!inputCity)
+        alert('Digite uma cidade!')
 
     captureWeather(inputCity)
 }
@@ -87,7 +110,8 @@ function showData(obj) {
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
     containUmid.innerHTML = `Umidade dor ar: ${obj.humidade}%`
-    containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}` //traduzir(obj.sky)
+    containEstTemp.innerHTML = `Estado do tempo: ${traduzir(obj.sky)}`
+    console.log(obj.sky)
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
 }
@@ -110,7 +134,9 @@ function traduzir(chave) {
         'sand': 'Presença de areia na atmosfera (possívelmente uma tempestade de areia)',
         'thunderstorm': 'Chuva forte com trovoadas',
         'heavy intensity rain': 'Chuva intensa, possibilidade de inundações',
-        'very heavy rain': 'Chuva intensa, altas chances de inundações'
+        'very heavy rain': 'Chuva intensa, altas chances de inundações',
+        'moderate rain': 'Chuva moderada',
+        'light rain': 'Chuva com precipitação baixa'
     }
 
     return obj[chave]
