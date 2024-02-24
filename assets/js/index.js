@@ -1,5 +1,5 @@
 function init() {
-    captureWeather('brasilia')
+    captureWeather('Brasília')
 }
 init()
 
@@ -7,7 +7,7 @@ document.addEventListener('click', (event) => {
     const el = event.target
 
     if (el.classList.contains('line') || el.classList.contains('menuIco') || el.classList.contains('hamburger'))
-        showMenu()
+        showMenu() //mostra as opções do menu
 
     if (el.classList.contains('btn'))
         localSelect(event)
@@ -36,15 +36,25 @@ function localSelect(e) {
 
     let inputCity = document.querySelector('#inp-local').value
 
-    if (!inputCity)
+    if (!inputCity) {
         alert('Digite uma cidade!')
+        return
+    }
 
     captureWeather(inputCity)
 }
 
 async function captureWeather(city) {
+    const word = city.split(' ')
+    let siglaEstado = ''
+
+    if (word.length > 1 && word[word.length - 1].length === 2) {
+        const sigla = word[word.length - 1].toUpperCase()
+        siglaEstado = await ObterSiglaEstado(sigla)
+    }
+
     const apiKey = '93a12f36a8cc9e0a562b1aa29fd8955b'
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}${siglaEstado},BR&appid=${apiKey}&units=metric`
 
     try {
         const response = await fetch(url)
@@ -58,26 +68,34 @@ async function captureWeather(city) {
     }
 }
 
+async function ObterSiglaEstado(sigla) {
+    const ibgeApiUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/municipios`
+    const response = await fetch(ibgeApiUrl)
+    const states = await response.json()
+
+    for (let i = 0; i < states.length; i++) {
+        const state = states[i]
+
+        if (state.microrregiao.mesorregiao.UF.sigla === sigla) {
+            return `, ${state.microrregiao.mesorregiao.UF.sigla}`
+        }
+    }
+    return ''
+}
+
 function dataLoc(data) {
     const coordLat = data.coord.lat
     const coordLon = data.coord.lon
     const sensacaoTerm = data.main.feels_like
-    const humidade = data.main.humidity
+    const umidade = data.main.humidity
     const temp = data.main.temp
     const nameCity = data.name
-    const countryCity = data.sys.country
     const stateCity = data.sys.state
     const sky = data.weather[0].description
     const windVel = data.wind.speed
     const ultraViol = data.value
 
-    if (countryCity !== 'BR') {
-        alert('Este website trabalha apenas com cidades brasileiras!')
-        document.querySelector('#inp-local').value = ''
-        return
-    }
-        
-    return { coordLat, coordLon, sensacaoTerm, humidade, temp, nameCity, countryCity, stateCity, sky, windVel, ultraViol }
+    return { coordLat, coordLon, sensacaoTerm, umidade, temp, nameCity, stateCity, sky, windVel, ultraViol }
 }
 
 async function showData(obj) {
@@ -89,10 +107,12 @@ async function showData(obj) {
     const containWindVel = document.querySelector('#wind-vel')
     const containUV = document.querySelector('#ind-uv')
 
-    containNameCity.innerHTML = `${obj.nameCity}, ${await getState(obj.nameCity)}, ${obj.countryCity}`
+    containNameCity.classList.add(wheel-and-hamster)
+
+    containNameCity.innerHTML = `${obj.nameCity} - ${await getState(obj.nameCity)}`
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
-    containUmid.innerHTML = `Umidade dor ar: ${obj.humidade}%`
+    containUmid.innerHTML = `Umidade dor ar: ${obj.umidade}%`
     containEstTemp.innerHTML = `Estado do tempo: ${await traduzir(obj.sky)}`
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
@@ -106,31 +126,21 @@ async function getState(Namecity) {
         document.querySelector('#inp-local').value = ''
         return
     }
+    const ibgeApiUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/municipios`;
+    const response = await fetch(ibgeApiUrl)
+    const cities = await response.json()
 
-    const response = await fetch('./assets/json/cidades.json');
-    const jsonData = await response.json()
-
-    const cities = jsonData.cities
-    const states = jsonData.states
 
     for (let i = 0; i < cities.length; i++) {
         const city = cities[i]
 
-        if (city.name === Namecity) {
-            const stateId = city.state_id 
+        if (city.nome === Namecity) {
+            const Estado = city.microrregiao.mesorregiao.UF.sigla
 
-            for (let chave in states) {
-
-                if (chave == stateId) {
-                    const stadeOfCity = states[chave]
-                    return stadeOfCity
-                }
-            }
-
+            const stadeOfCity = Estado
+            return stadeOfCity
         }
     }
-    /* alert(`Digite uma cidade válida!`)
-    document.querySelector('#inp-local').value = '' */
 }
 
 function traduzir(chave) {
