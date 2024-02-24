@@ -1,5 +1,5 @@
 function init() {
-    captureWeather('Brasília')
+    captureWeather('Brasília', '')
 }
 init()
 
@@ -22,7 +22,6 @@ document.addEventListener('click', (event) => {
 
         localSelect(event)
     }
-        
 })
 
 function showMenu() {
@@ -36,14 +35,13 @@ function showMenu() {
     if (styleEl.display === 'none') {
         menu.style.display = 'block'
         containMenuIco2.appendChild(containerIcoSpan)
-
     } else {
         tableIcoTd.appendChild(containerIcoSpan)
         menu.style.display = 'none'
     }
 }
 
-function localSelect(e) {
+async function localSelect(e) {
     e.preventDefault()
 
     let inputCity = document.querySelector('#inp-local').value
@@ -53,25 +51,27 @@ function localSelect(e) {
         return
     }
 
-    captureWeather(inputCity)
-}
-
-async function captureWeather(city) {
-    const word = city.split(' ')
+    const word = inputCity.split(' ')
     let siglaEstado = ''
 
     if (word.length > 1 && word[word.length - 1].length === 2) {
         const sigla = word[word.length - 1].toUpperCase()
         siglaEstado = await ObterSiglaEstado(sigla)
+        word.pop()
+        inputCity = word.join(' ')
     }
 
+    captureWeather(inputCity, siglaEstado)
+}
+
+async function captureWeather(city, sigla) {
     const apiKey = '93a12f36a8cc9e0a562b1aa29fd8955b'
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}${siglaEstado},BR&appid=${apiKey}&units=metric`
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}${sigla},BR&appid=${apiKey}&units=metric`
 
     try {
         const response = await fetch(url)
         const data = await response.json()
-        
+
         if (data.sys.country !== 'BR') {
             alert('Este website só tem suporte a cidades brasileiras!')
             document.querySelector('#inp-local').value = ''
@@ -117,7 +117,6 @@ function dataLoc(data) {
 }
 
 async function showData(obj) {
-
     const containNameCity = document.querySelector('#name-city')
     const containTemp = document.querySelector('#temp')
     const containSensTerm = document.querySelector('#sensacao-term')
@@ -126,7 +125,7 @@ async function showData(obj) {
     const containWindVel = document.querySelector('#wind-vel')
     const containUV = document.querySelector('#ind-uv')
 
-    document.querySelector('#loading').style.display = 'none'
+    document.querySelector('#loading').style.display = 'none' //tira o loading
 
     containNameCity.innerHTML = `${obj.nameCity} - ${await getState(obj.nameCity)}`
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
@@ -145,10 +144,10 @@ async function getState(Namecity) {
         document.querySelector('#inp-local').value = ''
         return
     }
+
     const ibgeApiUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/municipios`;
     const response = await fetch(ibgeApiUrl)
     const cities = await response.json()
-
 
     for (let i = 0; i < cities.length; i++) {
         const city = cities[i]
