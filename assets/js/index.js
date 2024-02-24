@@ -9,8 +9,20 @@ document.addEventListener('click', (event) => {
     if (el.classList.contains('line') || el.classList.contains('menuIco') || el.classList.contains('hamburger'))
         showMenu() //mostra as opções do menu
 
-    if (el.classList.contains('btn'))
+    if (el.classList.contains('btn')) {
+        document.querySelector('#loading').style.display = 'block'
+
+        document.querySelector('#name-city').innerHTML = ''
+        document.querySelector('#temp').innerHTML = ''
+        document.querySelector('#sensacao-term').innerHTML = ''
+        document.querySelector('#umid').innerHTML = ''
+        document.querySelector('#est-temp').innerHTML = ''
+        document.querySelector('#wind-vel').innerHTML = ''
+        document.querySelector('#ind-uv').innerHTML = ''
+
         localSelect(event)
+    }
+        
 })
 
 function showMenu() {
@@ -59,7 +71,13 @@ async function captureWeather(city) {
     try {
         const response = await fetch(url)
         const data = await response.json()
-        //console.log(data)
+        
+        if (data.sys.country !== 'BR') {
+            alert('Este website só tem suporte a cidades brasileiras!')
+            document.querySelector('#inp-local').value = ''
+            return
+        }
+
         const dataLocObj = dataLoc(data)
         showData(dataLocObj)
 
@@ -77,7 +95,7 @@ async function ObterSiglaEstado(sigla) {
         const state = states[i]
 
         if (state.microrregiao.mesorregiao.UF.sigla === sigla) {
-            return `, ${state.microrregiao.mesorregiao.UF.sigla}`
+            return `,${state.microrregiao.mesorregiao.UF.sigla}`
         }
     }
     return ''
@@ -99,6 +117,7 @@ function dataLoc(data) {
 }
 
 async function showData(obj) {
+
     const containNameCity = document.querySelector('#name-city')
     const containTemp = document.querySelector('#temp')
     const containSensTerm = document.querySelector('#sensacao-term')
@@ -107,7 +126,7 @@ async function showData(obj) {
     const containWindVel = document.querySelector('#wind-vel')
     const containUV = document.querySelector('#ind-uv')
 
-    containNameCity.classList.add(wheel-and-hamster)
+    document.querySelector('#loading').style.display = 'none'
 
     containNameCity.innerHTML = `${obj.nameCity} - ${await getState(obj.nameCity)}`
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`

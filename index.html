@@ -50,48 +50,42 @@
                 <button class="btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="btn">
                         <path
-                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" / class="btn">
-                        <path d="M0 0h24v24H0z" fill="none" />
+                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                            / class="btn">
+                            <path d="M0 0h24v24H0z" fill="none" />
                     </svg>
                 </button>
             </form>
         </div>
 
         <div id="data">
-            <table>
+            <div id="loading">
+                <div class="dot-spinner">
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                </div>
+            </div>
+            <table id="table-clima">
                 <tr>
-                    <td colspan="2" id="name-city">
-                        <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
-                            <div class="wheel"></div>
-                            <div class="hamster">
-                                <div class="hamster__body">
-                                    <div class="hamster__head">
-                                        <div class="hamster__ear"></div>
-                                        <div class="hamster__eye"></div>
-                                        <div class="hamster__nose"></div>
-                                    </div>
-                                    <div class="hamster__limb hamster__limb--fr"></div>
-                                    <div class="hamster__limb hamster__limb--fl"></div>
-                                    <div class="hamster__limb hamster__limb--br"></div>
-                                    <div class="hamster__limb hamster__limb--bl"></div>
-                                    <div class="hamster__tail"></div>
-                                </div>
-                            </div>
-                            <div class="spoke"></div>
-                        </div>
-                    </td>
+                    <td colspan="2" id="name-city" class="tableData"></td>
                 </tr>
                 <tr>
-                    <td id="temp"></td>
-                    <td id="sensacao-term"></td>
+                    <td id="temp" class="tableData"></td>
+                    <td id="sensacao-term" class="tableData"></td>
                 </tr>
                 <tr>
-                    <td id="umid"></td>
-                    <td id="est-temp"></td>
+                    <td id="umid" class="tableData"></td>
+                    <td id="est-temp" class="tableData"></td>
                 </tr>
                 <tr>
-                    <td id="wind-vel"></td>
-                    <td id="ind-uv"></td>
+                    <td id="wind-vel" class="tableData"></td>
+                    <td id="ind-uv" class="tableData"></td>
                 </tr>
             </table>
         </div>
