@@ -8,6 +8,7 @@ function init() {
 }
 init()
 
+
 document.addEventListener('click', (event) => {
     const el = event.target
 
@@ -75,6 +76,9 @@ function dataLoc(data) {
     const sky = data.weather[0].description
     const windVel = data.wind.speed
     const ultraViol = data.value
+
+    if (countryCity !== 'BR')
+        return alert('Este website trabalha apenas com cidades brasileiras!')
 
     return { coordLat, coordLon, sensacaoTerm, humidade, temp, nameCity, countryCity, stateCity, sky, windVel, ultraViol }
 }
