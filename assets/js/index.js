@@ -2,29 +2,11 @@ function init() {
     navigator.geolocation.getCurrentPosition(function (position) {
         var latitude = position.coords.latitude
         var longitude = position.coords.longitude
-        getCityName(latitude, longitude)
+        console.log(latitude, longitude)
     })
     captureWeather('brasilia')
 }
 init()
-
-function getCityName(latitude, longitude) {
-    var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            var city = data.address.city
-            if (city) {
-                console.log("Nome da cidade:", city)
-            } else {
-                console.log("Cidade não encontrada.")
-            }
-        })
-        .catch(error => {
-            console.error("Ocorreu um erro ao obter os dados de localização:", error)
-        })
-}
 
 document.addEventListener('click', (event) => {
     const el = event.target
