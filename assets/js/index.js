@@ -51,6 +51,10 @@ async function localSelect(e) {
         return
     }
 
+    if (inputCity[inputCity.length - 1] === ' ') { //correção de bug
+        inputCity = inputCity.slice(0, -1)
+    }
+
     const word = inputCity.split(' ')
     let siglaEstado = ''
 
