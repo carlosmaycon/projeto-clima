@@ -81,7 +81,7 @@ header p {
     font-size: 2em;
     font-weight: bold;
 }
-#temp, #umid, #wind-vel, #sensacao-term, #est-temp, #ind-uv {
+#temp, #umid, #wind-vel, #sensacao-term, #est-temp, #pressure {
     padding: 7px;
     text-align: center;
     width: 50%;

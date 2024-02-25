@@ -18,7 +18,7 @@ document.addEventListener('click', (event) => {
         document.querySelector('#umid').innerHTML = ''
         document.querySelector('#est-temp').innerHTML = ''
         document.querySelector('#wind-vel').innerHTML = ''
-        document.querySelector('#ind-uv').innerHTML = ''
+        document.querySelector('#pressure').innerHTML = ''
 
         localSelect(event)
     }
@@ -66,7 +66,7 @@ verificaWidth()
 
 async function localSelect(e) { //obtem a cidade digitada
     e.preventDefault()
-
+ 
     let inputCity = document.querySelector('#inp-local').value
 
     if (!inputCity) { //caso não seja enviado nada
@@ -137,9 +137,9 @@ function dataLoc(data) { //obter os dados
     const sky = data.weather[0].description
     const windVel = data.wind.speed
     const windDirecao = data.wind.deg
-    const ultraViol = data.value
+    const pressure = data.main.pressure
 
-    return { coordLat, coordLon, sensacaoTerm, umidade, temp, nameCity, stateCity, sky, windVel, windDirecao, ultraViol }
+    return { coordLat, coordLon, sensacaoTerm, umidade, temp, nameCity, stateCity, sky, windVel, windDirecao, pressure }
 }
 
 async function showData(obj) { //mostra os dados
@@ -149,7 +149,7 @@ async function showData(obj) { //mostra os dados
     const containUmid = document.querySelector('#umid')
     const containEstTemp = document.querySelector('#est-temp')
     const containWindVel = document.querySelector('#wind-vel')
-    const containUV = document.querySelector('#ind-uv')
+    const containPress = document.querySelector('#pressure')
 
     containNameCity.innerHTML = `${obj.nameCity} - ${await getState(obj.nameCity)}`
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
@@ -157,7 +157,7 @@ async function showData(obj) { //mostra os dados
     containUmid.innerHTML = `Umidade dor ar: ${obj.umidade}%`
     containEstTemp.innerHTML = `Estado do tempo: ${await traduzirTemp(obj.sky)}`
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h - ${diVento(obj.windDirecao)}`
-    containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
+    containPress.innerHTML = `Pressão atmosférica: ${obj.pressure} hPa`
 
     document.querySelector('#loading').style.display = 'none' //tira o loading
 
@@ -229,20 +229,20 @@ let map
 function maps(lat, long) {
 
     if (!map) { // verifica se o mapa já está inicializado
-        map = L.map('map').setView([lat, long], 9);
+        map = L.map('map').setView([lat, long], 9)
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+        }).addTo(map)
     } else {
-        map.setView([lat, long], 9);
+        map.setView([lat, long], 9)
     }
 
     map.eachLayer(function (layer) { // remove marcadores antigos, se houver
         if (layer instanceof L.Marker) {
-            map.removeLayer(layer);
+            map.removeLayer(layer)
         }
-    });
+    })
 
-    L.marker([lat, long]).addTo(map);
+    L.marker([lat, long]).addTo(map)
 }
