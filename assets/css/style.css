@@ -86,3 +86,10 @@ header p {
     text-align: center;
     width: 50%;
 }
+
+#map {
+    height: 230px;
+    width: 88%;
+    border-radius: 10px;
+    margin: 30px auto;
+}

@@ -1,4 +1,4 @@
-function init() {
+function init() { //primeira cidade a aparecer
     captureWeather('Brasília', '')
 }
 init()
@@ -10,9 +10,9 @@ document.addEventListener('click', (event) => {
         showMenu() //mostra as opções do menu
 
     if (el.classList.contains('btn')) {
-        document.querySelector('#loading').style.display = 'block'
+        document.querySelector('#loading').style.display = 'block' //mostra o loading
 
-        document.querySelector('#name-city').innerHTML = ''
+        document.querySelector('#name-city').innerHTML = '' //ocultam a tabela por um instante
         document.querySelector('#temp').innerHTML = ''
         document.querySelector('#sensacao-term').innerHTML = ''
         document.querySelector('#umid').innerHTML = ''
@@ -24,7 +24,7 @@ document.addEventListener('click', (event) => {
     }
 })
 
-function showMenu() {
+function showMenu() { //mostra o menu
     const menu = document.querySelector('#menu')
     const styleEl = getComputedStyle(menu)
 
@@ -41,21 +41,19 @@ function showMenu() {
     }
 }
 
-async function localSelect(e) {
+async function localSelect(e) { //obtem a cidade digitada
     e.preventDefault()
 
     let inputCity = document.querySelector('#inp-local').value
 
-    if (!inputCity) {
+    if (!inputCity) { //caso não seja enviado nada
         alert('Digite uma cidade!')
         return
     }
 
-    if (inputCity[inputCity.length - 1] === ' ') { //correção de bug
-        inputCity = inputCity.slice(0, -1)
-    }
+    inputCity = inputCity.trim()
 
-    const word = inputCity.split(' ')
+    const word = inputCity.split(' ') //para obter a sigla, caso digitada
     let siglaEstado = ''
 
     if (word.length > 1 && word[word.length - 1].length === 2) {
@@ -76,7 +74,7 @@ async function captureWeather(city, sigla) {
         const response = await fetch(url)
         const data = await response.json()
 
-        if (data.sys.country !== 'BR') {
+        if (data.sys.country !== 'BR') { //verifica se a cidade é brasileira
             alert('Este website só tem suporte a cidades brasileiras!')
             document.querySelector('#inp-local').value = ''
             return
@@ -86,11 +84,11 @@ async function captureWeather(city, sigla) {
         showData(dataLocObj)
 
     } catch (error) {
-        getState()
+        getState() //como não está sendo enviado nenhum argumento, esta função alertará um erro
     }
 }
 
-async function ObterSiglaEstado(sigla) {
+async function ObterSiglaEstado(sigla) { //verifica se a sigla digitada é válida a algum Estado
     const ibgeApiUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/municipios`
     const response = await fetch(ibgeApiUrl)
     const states = await response.json()
@@ -102,10 +100,10 @@ async function ObterSiglaEstado(sigla) {
             return `,${state.microrregiao.mesorregiao.UF.sigla}`
         }
     }
-    return ''
+    return '' //caso chegue aqui, isto não afetará o link
 }
 
-function dataLoc(data) {
+function dataLoc(data) { //obter os dados
     const coordLat = data.coord.lat
     const coordLon = data.coord.lon
     const sensacaoTerm = data.main.feels_like
@@ -120,7 +118,7 @@ function dataLoc(data) {
     return { coordLat, coordLon, sensacaoTerm, umidade, temp, nameCity, stateCity, sky, windVel, ultraViol }
 }
 
-async function showData(obj) {
+async function showData(obj) { //mostra os dados
     const containNameCity = document.querySelector('#name-city')
     const containTemp = document.querySelector('#temp')
     const containSensTerm = document.querySelector('#sensacao-term')
@@ -133,17 +131,19 @@ async function showData(obj) {
     containTemp.innerHTML = `Temperatura: ${obj.temp} °C`
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
     containUmid.innerHTML = `Umidade dor ar: ${obj.umidade}%`
-    containEstTemp.innerHTML = `Estado do tempo: ${await traduzir(obj.sky)}`
+    containEstTemp.innerHTML = `Estado do tempo: ${await traduzirTemp(obj.sky)}`
     containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
 
     document.querySelector('#loading').style.display = 'none' //tira o loading
 
     document.querySelector('#inp-local').value = ''
+
+    maps(obj.coordLat, obj.coordLon)
 }
 
-async function getState(Namecity) {
-    if (!Namecity) {
+async function getState(Namecity) { //obtem o Estado
+    if (!Namecity) { //caso não tenha sido enviado argumentos (vem do catch)
         alert('Digite uma cidade válida!')
         document.querySelector('#inp-local').value = ''
         return
@@ -159,13 +159,12 @@ async function getState(Namecity) {
         if (city.nome === Namecity) {
             const Estado = city.microrregiao.mesorregiao.UF.sigla
 
-            const stadeOfCity = Estado
-            return stadeOfCity
+            return Estado
         }
     }
 }
 
-function traduzir(chave) {
+function traduzirTemp(chave) {
     const obj = {
         'overcast clouds': 'Céu nublado',
         'broken clouds': 'Céu parcialmente nublado',
@@ -189,4 +188,26 @@ function traduzir(chave) {
     }
 
     return obj[chave]
+}
+
+let map
+function maps(lat, long) {
+    
+    if (!map) { // verifica se o mapa já está inicializado
+        map = L.map('map').setView([lat, long], 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    } else {
+        map.setView([lat, long], 9);
+    }
+
+    map.eachLayer(function(layer) { // remove marcadores antigos, se houver
+        if (layer instanceof L.Marker) {
+            map.removeLayer(layer);
+        }
+    });
+
+    L.marker([lat, long]).addTo(map);
 }
