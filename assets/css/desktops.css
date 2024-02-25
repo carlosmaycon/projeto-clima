@@ -1,0 +1,42 @@
+body {
+    max-width: 900px;
+    margin: auto;
+    border: 1px solid black;
+}
+
+.menuIcoContainer {
+    display: none;
+}
+
+#td-menu {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    line-height: 46.8px;
+    text-align: center;
+}
+
+#td-menu li{
+    display: inline;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#td-menu td {
+    display: flex;
+    justify-content: space-around;
+}
+
+#td-menu a {
+    text-decoration: none;
+    color: black;
+    margin: 0px 7px;
+}
+
+#td-menu a:hover {
+    text-decoration: underline;
+}
+
+#list {
+    width: 100%;
+}
+

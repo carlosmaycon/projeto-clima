@@ -41,6 +41,29 @@ function showMenu() { //mostra o menu
     }
 }
 
+function verificaWidth() {
+    const list = document.querySelector('#list')
+
+    window.onload = function () {
+        let larguraDaTela = window.innerWidth
+        mediaQuery(larguraDaTela)
+    }
+
+    window.onresize = function () {
+        var larguraDaTela = window.innerWidth
+        mediaQuery(larguraDaTela)
+    }
+    
+    function mediaQuery(width) {
+        if (width >= 900) {
+            document.querySelector('#td-menu').appendChild(list)
+        } else {
+            document.querySelector('#menuList').appendChild(list)
+        }
+    }
+}
+verificaWidth()
+
 async function localSelect(e) { //obtem a cidade digitada
     e.preventDefault()
 
@@ -73,7 +96,7 @@ async function captureWeather(city, sigla) {
     try {
         const response = await fetch(url)
         const data = await response.json()
-
+console.log(data)
         if (data.sys.country !== 'BR') { //verifica se a cidade é brasileira
             alert('Este website só tem suporte a cidades brasileiras!')
             document.querySelector('#inp-local').value = ''
@@ -113,9 +136,10 @@ function dataLoc(data) { //obter os dados
     const stateCity = data.sys.state
     const sky = data.weather[0].description
     const windVel = data.wind.speed
+    const windDirecao = data.wind.deg
     const ultraViol = data.value
 
-    return { coordLat, coordLon, sensacaoTerm, umidade, temp, nameCity, stateCity, sky, windVel, ultraViol }
+    return { coordLat, coordLon, sensacaoTerm, umidade, temp, nameCity, stateCity, sky, windVel, windDirecao, ultraViol }
 }
 
 async function showData(obj) { //mostra os dados
@@ -132,7 +156,7 @@ async function showData(obj) { //mostra os dados
     containSensTerm.innerHTML = `Sensação térmica de ${obj.sensacaoTerm} °C`
     containUmid.innerHTML = `Umidade dor ar: ${obj.umidade}%`
     containEstTemp.innerHTML = `Estado do tempo: ${await traduzirTemp(obj.sky)}`
-    containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h`
+    containWindVel.innerHTML = `Velocidade do vento: ${(obj.windVel * 3.6).toFixed(2)} Km/h - ${diVento(obj.windDirecao)}`
     containUV.innerHTML = `Índice de UV: ${obj.ultraViol}`
 
     document.querySelector('#loading').style.display = 'none' //tira o loading
@@ -140,6 +164,17 @@ async function showData(obj) { //mostra os dados
     document.querySelector('#inp-local').value = ''
 
     maps(obj.coordLat, obj.coordLon)
+}
+
+function diVento(d) {
+    if (d < 22.5 || d > 337.5) return `N &#8593;`
+    if (d < 67.5) return `NE &#8599;`
+    if (d < 112.5) return `L &#8594;`
+    if (d < 157.5) return `SE &#8600;`
+    if (d < 202.5) return `S &#8595;`
+    if (d < 247.5) return `SW &#8601;`
+    if (d < 292.5) return `O $&#8592;`
+    if (d < 337.5) return `NW &#8598;`
 }
 
 async function getState(Namecity) { //obtem o Estado
@@ -192,7 +227,7 @@ function traduzirTemp(chave) {
 
 let map
 function maps(lat, long) {
-    
+
     if (!map) { // verifica se o mapa já está inicializado
         map = L.map('map').setView([lat, long], 9);
 
@@ -203,7 +238,7 @@ function maps(lat, long) {
         map.setView([lat, long], 9);
     }
 
-    map.eachLayer(function(layer) { // remove marcadores antigos, se houver
+    map.eachLayer(function (layer) { // remove marcadores antigos, se houver
         if (layer instanceof L.Marker) {
             map.removeLayer(layer);
         }
